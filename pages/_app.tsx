@@ -1,4 +1,3 @@
-import '../styles/tailwind.css';
 import { ChakraProvider } from '@chakra-ui/react'
 
 const App = ({Component, pageProps}) => {

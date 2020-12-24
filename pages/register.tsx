@@ -1,11 +1,12 @@
 import React from 'react';
-import { Grid, Box, Image, Container, Heading, FormControl, FormLabel, Input, Stack, HStack, Button, Checkbox, Text, Divider, Flex, Spacer, VStack } from '@chakra-ui/react'
+import { Grid, Box, Container, Heading, Input, Stack, HStack, Button, Checkbox, Text, Divider, Flex, Spacer, Image } from '@chakra-ui/react'
 import NextLink from 'next/link';
 import { schema } from '../validation';
 import { Formik, Form } from 'formik';
 import { IRegisterForm } from '../interfaces/register';
 import { NextPage } from 'next';
 import FormError from '../components/FormError';
+import { Layout } from '../components/Layout';
 
 
 const Register: NextPage = () => {
@@ -19,14 +20,21 @@ const Register: NextPage = () => {
 
     return (
         <Grid templateColumns="repeat(2, 1fr)"> 
-            <Box w="100%" h="100vh">
-               <Image 
-               src="/doctor.png"
-               alt="docter image"
-               objectFit="cover"
-               width="100%"
-               height="100vh"
-               />
+            <Box w="100%" h="100vh" bg='#3B28CC'>
+                <Layout mt={20} mw='600px' padding={5}>
+                    <Text color='white' fontSize='4xl' fontWeight='600'>Booking appointments made easy.</Text>
+                    <Text color='white' fontSize='sm' mt={2}>
+                        Browse a catalog of health care centres, health care professionals and general practioners near you.
+                        Book appointments and so much more all at the click of a button.
+                    </Text>
+                    <Box display="flex" justifyContent="center" alignItems="center">
+                        <Image 
+                            src='/medicine.svg'
+                            width='500px'
+                            height='500px'
+                        />
+                    </Box>
+                </Layout>
             </Box>
             <Box w="100%" h="100vh">
                 <Flex>
@@ -38,6 +46,7 @@ const Register: NextPage = () => {
                     </Box>
                 </Flex>
                 <Container centerContent={true} mt={20}>
+                        <Heading mb={5}>🏥</Heading>
                         <Heading>
                             Create Account
                         </Heading>
@@ -105,7 +114,7 @@ const Register: NextPage = () => {
                                         </Button>
                                         <Divider />
                                         <Box justifyContent="center" alignItems="center" display="flex" flexDirection="row">
-                                            <Text color="gray.500" fontSize="sm">Already have an account? </Text>
+                                            <Text color="gray.500" fontSize="sm" mr={2}>Already have an account? </Text>
                                             <NextLink href="/login">
                                                 <a>
                                                     <Text color="blue.800" fontWeight="bold">Sign In.</Text>
@@ -115,8 +124,6 @@ const Register: NextPage = () => {
                                     </Stack>
                                 </Form>
                             )}
-
-
                         </Formik>
                 </Container>
             </Box>

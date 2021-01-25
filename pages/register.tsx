@@ -21,11 +21,17 @@ const Register: NextPage = () => {
     return (
         <Grid templateColumns="repeat(2, 1fr)"> 
             <Box w="100%" h="100vh" bg='#3B28CC'>
+                <Flex>
+                    <Box p={5}>
+                        <NextLink href="/">
+                            <Heading size='md' color='white'>Wellness</Heading>
+                        </NextLink>
+                    </Box>
+                </Flex>
                 <Layout mt={20} mw='600px' padding={5}>
-                    <Text color='white' fontSize='4xl' fontWeight='600'>Booking appointments made easy.</Text>
-                    <Text color='white' fontSize='sm' mt={2}>
-                        Browse a catalog of health care centres, health care professionals and general practioners near you.
-                        Book appointments and so much more all at the click of a button.
+                    <Text color='white' fontSize='4xl' fontWeight='700'>Health & wellness, simplified.</Text>
+                    <Text color='white' fontSize='sm'>
+                        Discover medical facilities and general practitioners all in one place. Book and manage your appointments, profile etc all a few taps away.
                     </Text>
                     <Box display="flex" justifyContent="center" alignItems="center">
                         <Image 
@@ -108,7 +114,7 @@ const Register: NextPage = () => {
                                         loadingText="Signing up..."
                                         mb={5}
                                         colorScheme="blue"
-                                        bg="#3B28CC"
+                                        bg="#2E5EAA"
                                         >
                                             Sign Up
                                         </Button>

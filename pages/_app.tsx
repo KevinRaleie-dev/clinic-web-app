@@ -1,11 +1,15 @@
-import { ChakraProvider } from '@chakra-ui/react'
+import { ChakraProvider } from '@chakra-ui/react';
+import { ApolloProvider } from '@apollo/client';
+import { client } from '../src/client';
 
-const App = ({Component, pageProps}) => {
+const App = ({Component, pageProps}: any) => {
     
     return (
-        <ChakraProvider>
-            <Component {...pageProps}/>
-        </ChakraProvider>
+        <ApolloProvider client={client}>
+            <ChakraProvider>
+                <Component {...pageProps}/>
+            </ChakraProvider>
+        </ApolloProvider>
     );
 }
 

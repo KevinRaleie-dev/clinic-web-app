@@ -2,21 +2,28 @@ import React from 'react';
 import { Grid, Box, Container, Heading, Input, Stack, HStack, Button, Checkbox, Text, Divider, Flex, Spacer, Image } from '@chakra-ui/react'
 import NextLink from 'next/link';
 import { schema } from '../validation';
-import { Formik, Form } from 'formik';
-import { IRegisterForm } from '../interfaces/register';
+import { Formik, Form, useFormik } from 'formik';
 import { NextPage } from 'next';
 import FormError from '../components/FormError';
 import { Layout } from '../components/Layout';
+import { IAuthProps } from '../interfaces/auth';
 
 
 const Register: NextPage = () => {
-
-    const initialValues: IRegisterForm = {
-        email: '',
-        firstName: '',
-        lastName: '',
-        password: ''
-    }
+    const formik = useFormik<IAuthProps>({
+        initialValues: {
+            email: '',
+            firstName: '',
+            lastName: '',
+            password: ''
+        },
+        validationSchema: schema, 
+        onSubmit: async (values, actions) => {
+            await new Promise((r) => setTimeout(r, 3000));
+            console.log(values);
+            actions.setSubmitting(false);
+        }
+    })
 
     return (
         <Grid templateColumns="repeat(2, 1fr)"> 
@@ -56,53 +63,43 @@ const Register: NextPage = () => {
                         <Heading>
                             Create Account
                         </Heading>
-                        <Formik
-                        initialValues={initialValues}
-                        onSubmit={ async (values, actions) => {
-                            await new Promise((r) => setTimeout(r, 3000));
-                            console.log(values);
-                            actions.setSubmitting(false);
-                        }}
-                        validationSchema={schema}
-                        >
-                            {({errors, touched, isSubmitting, handleBlur, handleChange, values}) => (
-                                <Form>
+                                <form onSubmit={formik.handleSubmit}>
                                     <Stack spacing={3} mt={5}>
                                             <Input name="email" 
                                             placeholder="Email address" 
-                                            value={values.email} 
-                                            onChange={handleChange('email')} 
-                                            onBlur={handleBlur('email')} />
-                                            {errors.email && touched.email ? <FormError>{errors.email}</FormError> : null}
+                                            value={formik.values.email} 
+                                            onChange={formik.handleChange('email')} 
+                                            onBlur={formik.handleBlur('email')} />
+                                            {formik.errors.email && formik.touched.email ? <FormError>{formik.errors.email}</FormError> : null}
                                         <HStack>
                                             <Stack>
                                                 <Input name="firstName" 
                                                 placeholder="First name"
-                                                value={values.firstName} 
-                                                onChange={handleChange('firstName')}
-                                                onBlur={handleBlur('firstName')} 
+                                                value={formik.values.firstName} 
+                                                onChange={formik.handleChange('firstName')}
+                                                onBlur={formik.handleBlur('firstName')} 
                                              />
-                                                {errors.firstName && touched.firstName ? <FormError>{errors.firstName}</FormError> : null}
+                                                {formik.errors.firstName && formik.touched.firstName ? <FormError>{formik.errors.firstName}</FormError> : null}
                                             </Stack>
                                             
                                             <Stack>
                                                 <Input name="lastName" 
                                                 placeholder="Last name"
-                                                value={values.lastName} 
-                                                onChange={handleChange('lastName')}
-                                                onBlur={handleBlur('lastName')} 
+                                                value={formik.values.lastName} 
+                                                onChange={formik.handleChange('lastName')}
+                                                onBlur={formik.handleBlur('lastName')} 
                                                 />                                        
-                                                {errors.lastName && touched.lastName ? <FormError>{errors.lastName}</FormError> : null}
+                                                {formik.errors.lastName && formik.touched.lastName ? <FormError>{formik.errors.lastName}</FormError> : null}
                                             </Stack>
                                         </HStack>
                                             <Input name="password" 
                                             placeholder="Password" 
                                             type="password"
-                                            value={values.password} 
-                                            onChange={handleChange('password')}
-                                            onBlur={handleBlur('password')} 
+                                            value={formik.values.password} 
+                                            onChange={formik.handleChange('password')}
+                                            onBlur={formik.handleBlur('password')} 
                                             />
-                                            {errors.password && touched.password ? <FormError>{errors.password}</FormError> : null}
+                                            {formik.errors.password && formik.touched.password ? <FormError>{formik.errors.password}</FormError> : null}
                                         <Checkbox size="sm" colorScheme="blue">
                                             <Text fontSize="sm" color="gray.500">
                                                 I agree to the Terms & Conditions.
@@ -110,7 +107,7 @@ const Register: NextPage = () => {
                                         </Checkbox>
                                         <Button
                                         type="submit"
-                                        isLoading={isSubmitting}
+                                        isLoading={formik.isSubmitting}
                                         loadingText="Signing up..."
                                         mb={5}
                                         colorScheme="blue"
@@ -128,9 +125,7 @@ const Register: NextPage = () => {
                                             </NextLink>
                                         </Box>
                                     </Stack>
-                                </Form>
-                            )}
-                        </Formik>
+                                </form>
                 </Container>
             </Box>
         </Grid>

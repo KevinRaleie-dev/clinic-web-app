@@ -2,14 +2,21 @@ import React from 'react';
 import { Grid, Box, Container, Heading, Input, Stack, HStack, Button, Checkbox, Text, Divider, Flex, Spacer, Image } from '@chakra-ui/react'
 import NextLink from 'next/link';
 import { schema } from '../validation';
-import { Formik, Form, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import { NextPage } from 'next';
 import FormError from '../components/FormError';
 import { Layout } from '../components/Layout';
 import { IAuthProps } from '../interfaces/auth';
+import { useRegisterMutation } from '../src/generated/graphql';
+import { convertArrayToObject } from '../utils/toObject';
+import {useRouter} from 'next/router';
 
 
 const Register: NextPage = () => {
+    const [register] = useRegisterMutation();
+
+    const router = useRouter(); 
+
     const formik = useFormik<IAuthProps>({
         initialValues: {
             email: '',
@@ -18,10 +25,24 @@ const Register: NextPage = () => {
             password: ''
         },
         validationSchema: schema, 
-        onSubmit: async (values, actions) => {
-            await new Promise((r) => setTimeout(r, 3000));
-            console.log(values);
-            actions.setSubmitting(false);
+        onSubmit: async ({email, firstName, lastName, password}, {setErrors, resetForm}) => {
+            const response = await register({
+                variables: {
+                  email,
+                  firstName: firstName!,
+                  lastName: lastName!,
+                  password  
+                },
+            });
+
+            if(response.data?.registerUser.errors) {
+                setErrors(convertArrayToObject(response.data.registerUser.errors));
+            }
+            else if(response.data?.registerUser.user) {
+
+                // navigate to the login page
+                router.push('/login');
+            }
         }
     })
 

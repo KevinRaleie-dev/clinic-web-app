@@ -1,10 +1,22 @@
-import { Box, Button, Container, Divider, FormControl, Heading, Input, Stack, Text } from '@chakra-ui/react';
-import { NextPage } from 'next';
 import React from 'react';
+import { NextPage } from 'next';
+import { Box, Button, Container, Divider, Heading, Input, Stack, Text } from '@chakra-ui/react';
 import { Layout } from '../components/Layout';
+import { useFormik } from 'formik';
+import { IAuthProps } from '../interfaces/auth';
 import NextLink from 'next/link';
 
 const Login: NextPage = () => {
+    const formik = useFormik<IAuthProps>({
+        initialValues: {
+            email: '',
+            password: ''
+        },
+        onSubmit: (values, actions) => {
+            console.log(values);
+            actions.setSubmitting(false);
+        }
+    })
     return (
         <>
             <Box
@@ -31,18 +43,28 @@ const Login: NextPage = () => {
                     <Text color="gray.500" align="center">
                         Start booking appointments now.
                     </Text>
-                    <form>
+                    <form onSubmit={formik.handleSubmit}>
                         <Stack spacing={3} mt={10}>
                             <Input
+                            type="email"
+                            name="email"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.email}
                             placeholder="Email address"
                             />
                             <Input
+                            type="password"
+                            name="password"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.password}
                             placeholder="Password"
                             />
                             <Text _hover={{cursor: 'pointer'}} fontSize="sm" fontWeight="bold" color="blue.800">Forgot your password?</Text>
                             <Button
                             type="submit"
-                            // isLoading={isSubmitting}
+                            isLoading={formik.isSubmitting}
                             loadingText="Logging in..."
                             mb={5}
                             colorScheme="blue"

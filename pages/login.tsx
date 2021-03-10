@@ -1,20 +1,42 @@
 import React from 'react';
 import { NextPage } from 'next';
-import { Box, Button, Container, Divider, Heading, Input, Stack, Text } from '@chakra-ui/react';
+import { Box, Button, Container, Divider, Input, Stack, Text } from '@chakra-ui/react';
 import { Layout } from '../components/Layout';
 import { useFormik } from 'formik';
 import { IAuthProps } from '../interfaces/auth';
 import NextLink from 'next/link';
+import { useRouter } from "next/router";
+import { useLoginMutation } from '../src/generated/graphql';
+import { convertArrayToObject } from '../utils/toObject';
+import FormError from '../components/FormError';
+import Logo from '../components/Logo';
+import { theme } from '../theme/theme';
 
 const Login: NextPage = () => {
+    const router = useRouter(); 
+    const [login] = useLoginMutation();
+
     const formik = useFormik<IAuthProps>({
         initialValues: {
             email: '',
             password: ''
         },
-        onSubmit: (values, actions) => {
-            console.log(values);
-            actions.setSubmitting(false);
+        onSubmit: async (values, actions) => {
+            const response = await login({
+                variables: {
+                    email: values.email,
+                    password: values.password
+                }
+            });
+
+            if (response.data?.loginUser.errors) {
+                actions.setErrors(convertArrayToObject(response.data.loginUser.errors));
+            }
+
+            if (response.data?.loginUser.user) {
+                // take me to the home page
+                router.push('/dashboard');
+            }
         }
     })
     return (
@@ -26,11 +48,7 @@ const Login: NextPage = () => {
             alignItems="center"
             p={10}
             >
-                <Heading color="#2E5EAA" size="md" p={2} >
-                    <NextLink href="/">
-                        Wellness.
-                    </NextLink>
-                </Heading>
+                <Logo link="/" textColor={theme.primaryColor} textSize="md"/>
             </Box>
             <Container>
                 
@@ -53,6 +71,7 @@ const Login: NextPage = () => {
                             value={formik.values.email}
                             placeholder="Email address"
                             />
+                            {formik.errors.email && formik.touched.email ? <FormError>{formik.errors.email}</FormError> : ''}
                             <Input
                             type="password"
                             name="password"
@@ -61,14 +80,16 @@ const Login: NextPage = () => {
                             value={formik.values.password}
                             placeholder="Password"
                             />
+                            {formik.errors.password && formik.touched.password ? <FormError>{formik.errors.password}</FormError> : ''}
                             <Text _hover={{cursor: 'pointer'}} fontSize="sm" fontWeight="bold" color="blue.800">Forgot your password?</Text>
                             <Button
                             type="submit"
                             isLoading={formik.isSubmitting}
                             loadingText="Logging in..."
                             mb={5}
-                            colorScheme="blue"
-                            bg="#2E5EAA"
+                            color="white"
+                            colorScheme="gray.700"
+                            bg={theme.buttons.primary}
                             >
                                 Login
                             </Button>

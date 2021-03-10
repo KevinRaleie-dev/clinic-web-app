@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, Box, Container, Heading, Input, Stack, HStack, Button, Checkbox, Text, Divider, Flex, Spacer, Image } from '@chakra-ui/react'
 import NextLink from 'next/link';
-import { schema } from '../validation';
+import { schema } from '../utils/validation';
 import { useFormik } from 'formik';
 import { NextPage } from 'next';
 import FormError from '../components/FormError';
@@ -10,6 +10,8 @@ import { IAuthProps } from '../interfaces/auth';
 import { useRegisterMutation } from '../src/generated/graphql';
 import { convertArrayToObject } from '../utils/toObject';
 import {useRouter} from 'next/router';
+import Logo from '../components/Logo';
+import { theme } from '../theme/theme';
 
 
 const Register: NextPage = () => {
@@ -25,7 +27,7 @@ const Register: NextPage = () => {
             password: ''
         },
         validationSchema: schema, 
-        onSubmit: async ({email, firstName, lastName, password}, {setErrors, resetForm}) => {
+        onSubmit: async ({email, firstName, lastName, password}, {setErrors}) => {
             const response = await register({
                 variables: {
                   email,
@@ -48,42 +50,24 @@ const Register: NextPage = () => {
 
     return (
         <Grid templateColumns="repeat(2, 1fr)"> 
-            <Box w="100%" h="100vh" bg='#3B28CC'>
+            <Box w="80%" h="100vh" bg={theme.secondaryColor}>
                 <Flex>
                     <Box p={5}>
-                        <NextLink href="/">
-                            <Heading size='md' color='white'>Wellness</Heading>
-                        </NextLink>
+                        <Logo link="/" textColor="white" textSize="md"/>
                     </Box>
                 </Flex>
-                <Layout mt={20} mw='600px' padding={5}>
-                    <Text color='white' fontSize='4xl' fontWeight='700'>Health & wellness, simplified.</Text>
-                    <Text color='white' fontSize='sm'>
-                        Discover medical facilities and general practitioners all in one place. Book and manage your appointments, profile etc all a few taps away.
-                    </Text>
-                    <Box display="flex" justifyContent="center" alignItems="center">
-                        <Image 
-                            src='/medicine.svg'
-                            width='500px'
-                            height='500px'
-                        />
-                    </Box>
-                </Layout>
             </Box>
             <Box w="100%" h="100vh">
                 <Flex>
                     <Spacer />
-                    <Box p={5}>
-                        <Heading>
-                            👩🏽‍⚕️
-                        </Heading>
-                    </Box>
                 </Flex>
                 <Container centerContent={true} mt={20}>
-                        <Heading mb={5}>🏥</Heading>
                         <Heading>
                             Create Account
                         </Heading>
+                        <Text mt={5} fontSize='sm' color='gray.500'>
+                            Join us. Become part of a network of health professionals and practices.
+                        </Text>
                                 <form onSubmit={formik.handleSubmit}>
                                     <Stack spacing={3} mt={5}>
                                             <Input name="email" 
@@ -131,8 +115,9 @@ const Register: NextPage = () => {
                                         isLoading={formik.isSubmitting}
                                         loadingText="Signing up..."
                                         mb={5}
-                                        colorScheme="blue"
-                                        bg="#2E5EAA"
+                                        colorScheme="gray.700"
+                                        color='white'
+                                        bg={theme.buttons.primary}
                                         >
                                             Sign Up
                                         </Button>
